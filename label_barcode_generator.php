@@ -44,7 +44,7 @@ if (!$can_read) {
   die('<div class="errorBox">'.__('You are not authorized to view this section').'</div>');
 }
 
-$max_print = 50;
+$max_print = 24;
 
 /* RECORD OPERATION */
 if (isset($_POST['itemID']) AND !empty($_POST['itemID']) AND isset($_POST['itemAction'])) {
@@ -130,7 +130,7 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
   // strip the last comma
   $item_ids = substr_replace($item_ids, '', -1);
   // send query to database
-  $item_q = $dbs->query('SELECT b.title, i.item_code, b.call_number, i.call_number FROM item AS i
+  $item_q = $dbs->query('SELECT b.title, i.item_code, b.call_number, b.call_number FROM item AS i
     LEFT JOIN biblio AS b ON i.biblio_id=b.biblio_id
     WHERE i.item_code IN('.$item_ids.')');
   $item_data_array = array();
@@ -158,7 +158,8 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
   $tinggi       = $sysconf['print']['barcode']['barcode_box_height'];
   $barcode      = $sysconf['print']['barcode']['barcode_coll_size'];
   $border       = $sysconf['print']['barcode']['barcode_border_size'];
-  $header_color = array(0=>'#FF3030',1=>'#A9ED27',3=>'#FBC019',4=>'#19FB3C',5=>'#FF91FE',6=>'#15EDDE',7=>'#60A8F9',8=>'#99A0A8',9=>'#E7AD9D');
+  $header_color = array(0=>"#0080C0",1=>"#FFFF00",2=>"#0033CC",3=>"#80FFFF",4=>"#0080FF",5=>"#FF80C0",6=>"#33FF00",7=>"#FF0000",8=>"#C0C0C0",9=>"#8000FF");
+  $text_color = array(0=>"#000",1=>"#FFF",2=>"000",3=>"#000",4=>"#000",5=>"#000",6=>"#000",7=>"#000",8=>"#000",9=>"#000");
  
   
   // create html ouput
@@ -171,7 +172,7 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
   $html_str .= '.box{  width: '.$lebar.'cm;  height: '.$tinggi.'cm;  border: solid '.$border.'px grey;}'."\n";
   $html_str .= '.header{  border-bottom: solid '.$border.'px grey;  text-align: center;  height: auto;  position: relative;  padding: 10px 0px 10px 0px;  top: -'.$tinggi.'cm;}'."\n";
   $html_str .= '.barcode{  width: '.$barcode.'cm;  height: '.$tinggi.'cm;  text-align: center;}'."\n";
-  $html_str .= '.callNum{  text-align: center;  position: relative;  top: -'.$tinggi.'cm;  padding-top: 10px;}'."\n";
+  $html_str .= '.callNum{ font-size: 20px; text-align: center;  position: relative;  top: -'.$tinggi.'cm;  padding-top: 10px;}'."\n";
   $html_str .= '.cc{  height: '.$barcode.'cm;  width:  '.$tinggi.'cm;  -ms-transform: rotate(90deg);  -webkit-transform: rotate(90deg);transform: rotate(90deg); position: absolute; margin-top: '.(($tinggi-$barcode)/2).'cm;margin-left: -'.(($tinggi-$barcode)/2).'cm;}'."\n";
   $html_str .= '.cw{  width:  '.$tinggi.'cm;  height:  '.$barcode.'cm;  -ms-transform: rotate(-90deg);  -webkit-transform: rotate(-90deg); transform: rotate(-90deg); position: absolute; margin-top: '.(($tinggi-$barcode)/2).'cm; margin-left: -'.(($tinggi-$barcode)/2).'cm;}'."\n";
   $html_str .= '.r > .barcode{  margin-left: '.($lebar-$barcode).'cm;  border-left: solid '.$border.'px grey;}'."\n";
@@ -199,7 +200,7 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
        $html_str .= '<div class="title">'.$title_cut.'</div>'."\n";
        $html_str .= '<img class="img_code" src="'.SWB.IMG.'/barcodes/'.str_replace(array(' '), '_', $barcode[1]).'.png"/></div>'."\n";
        $html_str .= '</div>'."\n";
-       $html_str .=  '<div class="header" style="background-color:'.$header_color[substr($barcode[3],0,1)].';z-index:-2;">'.($sysconf['print']['barcode']['barcode_header_text']?$sysconf['print']['barcode']['barcode_header_text']:$sysconf['library_name']).'</div>'."\n";
+       $html_str .=  '<div class="header" style="background-color:'.$header_color[substr($barcode[3],0,1)].';color: '.$text_color[substr($barcode[3],0,1)].';text-transform: uppercase;font-weight: bold;z-index:-2;">'.($sysconf['print']['barcode']['barcode_header_text']?$sysconf['print']['barcode']['barcode_header_text']:$sysconf['library_name']).'</div>'."\n";
        $html_str .=  '<div class="callNum">'."\n";
             $callnumb = $barcode[3]==''?$barcode[2]:$barcode[3];
             $cn = explode(" ", $callnumb);
@@ -227,7 +228,7 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
     // update print queue count object
     echo '<script type="text/javascript">parent.$(\'#queueCount\').html(\'0\');</script>';
     // open result in window
-    echo '<script type="text/javascript">top.$.colorbox({href: "'.SWB.FLS.'/'.$print_file_name.'", iframe: true, width: 800, height: 500, title: "'.__('Item Barcodes Printing').'"})</script>';
+    echo '<script type="text/javascript">top.$.colorbox({href: "'.SWB.FLS.'/'.$print_file_name.'", iframe: true, width: 800, height: 500, title: "'.__('Cetak Label Barcode Warna Oleh Heru Subekti , Modifikasi Oleh M.Zaemakhrus').'"})</script>';
   } else { utility::jsAlert('ERROR! Item barcodes failed to generate, possibly because '.SB.FLS.' directory is not writable'); }
   exit();
 }
@@ -236,12 +237,12 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
 <fieldset class="menuBox">
 <div class="menuBoxInner printIcon">
   <div class="per_title">
-	  <h2><?php echo __('Item Barcodes Printing'); ?></h2>
+	  <h2><?php echo __('Cetak Label Barcode Warna'); ?></h2>
   </div>
   <div class="sub_section">
 	  <div class="btn-group">
       <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=clear" class="notAJAX btn btn-default"><i class="glyphicon glyphicon-trash"></i>&nbsp;<?php echo __('Clear Print Queue'); ?></a>
-      <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=print" class="notAJAX btn btn-default"><i class="glyphicon glyphicon-print"></i>&nbsp;<?php echo __('Print Barcodes for Selected Data');?></a>
+      <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=print" class="notAJAX btn btn-success"><i class="glyphicon glyphicon-print"></i>&nbsp;<?php echo __('Print Barcodes for Selected Data');?></a>
 	    <a href="<?php echo MWB; ?>bibliography/pop_print_settings.php?type=barcode" class="notAJAX btn btn-default openPopUp" title="<?php echo __('Change print barcode settings'); ?>"><i class="glyphicon glyphicon-wrench"></i></a>
 	  </div>
     <form name="search" action="<?php echo MWB; ?>bibliography/label_barcode_generator.php" id="search" method="get" style="display: inline;"><?php echo __('Search'); ?> :
@@ -280,14 +281,18 @@ if ($sysconf['index']['type'] == 'index' || ($sysconf['index']['type'] == 'sphin
   $table_spec = 'item LEFT JOIN search_biblio AS `index` ON item.biblio_id=`index`.biblio_id';
   $datagrid->setSQLColumn('item.item_code',
     'item.item_code AS \''.__('Item Code').'\'',
-    'index.title AS \''.__('Title').'\'');
+    'index.title AS \''.__('Title').'\'',
+    'index.call_number \''.__('Call Number').'\'',
+    'item.last_update AS \''.__('Last Update').'\'');
 } else {
   require LIB.'biblio_list.inc.php';
   // table spec
   $table_spec = 'item LEFT JOIN biblio ON item.biblio_id=biblio.biblio_id';
   $datagrid->setSQLColumn('item.item_code',
     'item.item_code AS \''.__('Item Code').'\'',
-    'biblio.title AS \''.__('Title').'\'');
+    'biblio.title AS \''.__('Title').'\'',
+    'biblio.call_number \''.__('Call Number').'\'',
+    'item.last_update AS \''.__('Last Update').'\'');
 }
 $datagrid->setSQLorder('item.last_update DESC');
 // is there any search
@@ -303,7 +308,7 @@ if (isset($_GET['keywords']) AND $_GET['keywords']) {
   } else {
     $search_str = $keywords;
   }
-  $biblio_list = new biblio_list($dbs, 20);
+  $biblio_list = new biblio_list($dbs, 24);
   $criteria = $biblio_list->setSQLcriteria($search_str);
 }
 if (isset($criteria)) {
@@ -317,11 +322,11 @@ $datagrid->edit_property = false;
 $datagrid->chbox_property = array('itemID', __('Add'));
 $datagrid->chbox_action_button = __('Add To Print Queue');
 $datagrid->chbox_confirm_msg = __('Add to print queue?');
-$datagrid->column_width = array('10%', '85%');
+$datagrid->column_width = array('10%', '60%');
 // set checkbox action URL
 $datagrid->chbox_form_URL = $_SERVER['PHP_SELF'];
 // put the result into variables
-$datagrid_result = $datagrid->createDataGrid($dbs, $table_spec, 20, $can_read);
+$datagrid_result = $datagrid->createDataGrid($dbs, $table_spec, 24, $can_read);
 if (isset($_GET['keywords']) AND $_GET['keywords']) {
   $msg = str_replace('{result->num_rows}', $datagrid->num_rows, __('Found <strong>{result->num_rows}</strong> from your keywords'));
   echo '<div class="infoBox">'.$msg.' : "'.$_GET['keywords'].'"<div>'.__('Query took').' <b>'.$datagrid->query_time.'</b> '.__('second(s) to complete').'</div></div>';
