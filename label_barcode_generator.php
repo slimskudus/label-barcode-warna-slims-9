@@ -241,9 +241,9 @@ if (isset($_GET['action']) AND $_GET['action'] == 'print') {
   </div>
   <div class="sub_section">
 	  <div class="btn-group">
-      <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=clear" class="notAJAX btn btn-default"><i class="glyphicon glyphicon-trash"></i>&nbsp;<?php echo __('Clear Print Queue'); ?></a>
-      <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=print" class="notAJAX btn btn-success"><i class="glyphicon glyphicon-print"></i>&nbsp;<?php echo __('Print Barcodes for Selected Data');?></a>
-	    <a href="<?php echo MWB; ?>bibliography/pop_print_settings.php?type=barcode" class="notAJAX btn btn-default openPopUp" title="<?php echo __('Change print barcode settings'); ?>"><i class="glyphicon glyphicon-wrench"></i></a>
+      <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=clear" class="notAJAX btn btn-default"><?php echo __('Clear Print Queue'); ?></a>
+      <a target="blindSubmit" href="<?php echo MWB; ?>bibliography/label_barcode_generator.php?action=print" class="notAJAX btn btn-success"><?php echo __('Print Barcodes for Selected Data');?></a>
+	    <a href="<?php echo MWB; ?>bibliography/pop_print_settings.php?type=barcode" class="notAJAX btn btn-default openPopUp" title="<?php echo __('Change print barcode settings'); ?>"><?php echo __('Change print barcode settings');?></a>
 	  </div>
     <form name="search" action="<?php echo MWB; ?>bibliography/label_barcode_generator.php" id="search" method="get" style="display: inline;"><?php echo __('Search'); ?> :
     <input type="text" name="keywords" size="30" />
