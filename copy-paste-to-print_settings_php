@@ -1,0 +1,3 @@
+$measure['print']['barcode']['barcode_coll_size'] = __('(cm)');
+$measure['print']['barcode']['barcode_position']  = __('(l atau r)');
+$measure['print']['barcode']['barcode_rotate']    = __('(cc atau cw)');
